@@ -38,22 +38,17 @@ class Spectrum{
 		}
 	}
 	getRGBnormal(xyz){
-		let tx = xyz[0]/**0.95047*/;
+		let tx = xyz[0]*0.95047;
 		let ty = xyz[1];
-		let tz = xyz[2]/**1.08883*/;
+		let tz = xyz[2]*1.08883;
 
-		/*return [
+		return [
 			this.gammaC( tx*2.745-ty*1.136-tz*0.435),
 			this.gammaC(-tx*0.969+ty*1.876+tz*0.041),
 			this.gammaC( tx*0.011-ty*0.114+tz*1.013)
 			
-		];*/
-		return [
-			this.gammaC( tx*2.371-ty*0.900-tz*0.471),
-			this.gammaC(-tx*0.513+ty*1.425+tz*0.089),
-			this.gammaC( tx*0.005-ty*0.015+tz*1.009)
-			
 		];
+
 	}
 	gammaC(x){
 		if(x <= 0.0031308){
