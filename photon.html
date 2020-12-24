@@ -18,7 +18,7 @@
 <script type="text/javascript" src="segment.js"></script>
 <script src="spectrum.js"></script>
 <script id="worker" type="norun/javascript">
-	
+
 let fbuff = [];
 let W = 0;
 let H = 0;
@@ -35,7 +35,7 @@ onmessage = function(e){
 		drawLine(...(lineList[i].pos),lineList[i].intensity/diff,lineList[i].channel);
 	}
 	postMessage([fbuff,e.data[5]]);
-	
+
 }
 
 
@@ -51,7 +51,7 @@ function drawLine(x0,y0,x1,y1,c,ch){
 			let coeff = Math.sqrt();
 			fbuff[(x+y*W)*(channelCount)+ch] += c*v*(Math.sqrt(dx*dx+dy*dy)/Math.max(dx,dy));
 		}
-		
+
 	}
 	function ipart(x){
 		return Math.floor(x);
@@ -137,7 +137,7 @@ let ctx = cv.getContext("2d");
 let W = cv.width;
 let H = cv.height;
 
-let channelCount =50;
+let channelCount =70;
 let fbuff = new Float32Array(W*H*channelCount);
 let dataBuff= ctx.createImageData(W,H);
 
@@ -154,7 +154,7 @@ THREAD.onmessage = function(e){
 	postHelper(tmpCount);
 	threadProgress.value = iterateCount;
 	threadProgress.title = iterateCount + " / "+maxIterate;
-	
+
 }
 let iterateCount = 0;
 let iterateNNN = 0;
@@ -198,10 +198,10 @@ async function loopOver(){
 		for(let j=0;j<channelCount;j++){
 			rngEngine.seed = Math.random()*2**31;
 			let channel = j/channelCount;
-			
+
 			onePath(10,channel);
-			
-			
+
+
 		}
 		currIterate = i;
 
@@ -211,20 +211,20 @@ async function loopOver(){
 			workerLaunched = true;
 			postHelper();
 		}
-		
+
 		renderProgress.value = i;
 		renderProgress.title = i + " / "+maxIterate;
-			
+
 		}
 		backgroundIterate= (backgroundIterate+1)%200;
 		if(isLimit < 100000)
 		i++;
-		
-		
+
+
 	}
 	renderProgress.value = maxIterate;
 	renderProgress.title = maxIterate + " / "+maxIterate;
-	
+
 }
 function postHelper(nowValue=0){
 	if(lineList.length > 0)
@@ -279,7 +279,7 @@ function copyOver(){
 	for(let x=0;x<W;x++){
 		let chList = [0,0,0,0];
 		for(let i=0;i<channelCount;i++){
-			
+
 			chList[0] += fbuff[(x+y*W)*(channelCount)+i]*spectrum.allocArr[i*3];
 			chList[1] += fbuff[(x+y*W)*(channelCount)+i]*spectrum.allocArr[i*3+1];
 			chList[2] += fbuff[(x+y*W)*(channelCount)+i]*spectrum.allocArr[i*3+2];
@@ -300,9 +300,9 @@ function copyChannel(nbuff,time){
 	for(let y=0;y<H;y++)
 	for(let x=0;x<W;x++){
 		for(let i=0;i<channelCount;i++)
-		fbuff[(x+y*W)*(channelCount)+i] = incrementAverage( fbuff[(x+y*W)*channelCount+i], 
+		fbuff[(x+y*W)*(channelCount)+i] = incrementAverage( fbuff[(x+y*W)*channelCount+i],
 			nbuff[(x+y*W)*(channelCount)+i] ,time);
-		
+
 	}
 
 }
