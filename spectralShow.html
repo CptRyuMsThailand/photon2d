@@ -1,0 +1,55 @@
+<html>
+<body>
+	<canvas id="cv" width="200" height="100"></canvas>
+</body>
+<script type="text/javascript" src="spectrum.js"></script>
+<script type="text/javascript" src="colorBlindness.js"></script>
+<script type="text/javascript">
+let ctx = cv.getContext("2d");
+let W = cv.width;
+let H = cv.height;
+let spe = new Spectrum();
+let blindTritanope = new colorBlindness([1,0,0,0,1,0,-0.867,1.867,0]);//Blue
+let blindDeuteranopia = new colorBlindness([1,0,0,0.951,0,0.048,0,0,1]);//Green
+let blindProtanopia = new colorBlindness([0,1.051,-0.051,0,1,0,0,0,1]);//Red
+for(let i=0;i<W;i++)
+{
+	{
+	ctx.beginPath();
+	ctx.moveTo(i,0);
+	ctx.lineTo(i,H/4);
+	let fillColorRaw = spe.getRGBnormal(i/W);
+	let fillColor = blindTritanope.simulate(...fillColorRaw);
+	ctx.strokeStyle = `rgb(${fillColor[0]*255},${fillColor[1]*255},${fillColor[2]*255})`;
+	ctx.stroke();
+}
+{
+	ctx.beginPath();
+	ctx.moveTo(i,H/4);
+	ctx.lineTo(i,H/2);
+	let fillColorRaw = spe.getRGBnormal(i/W);
+	let fillColor = blindDeuteranopia.simulate(...fillColorRaw);
+	ctx.strokeStyle = `rgb(${fillColor[0]*255},${fillColor[1]*255},${fillColor[2]*255})`;
+	ctx.stroke();
+}
+{
+	ctx.beginPath();
+	ctx.moveTo(i,H/2);
+	ctx.lineTo(i,H*3/4);
+	let fillColorRaw = spe.getRGBnormal(i/W);
+	let fillColor = blindProtanopia.simulate(...fillColorRaw);
+	ctx.strokeStyle = `rgb(${fillColor[0]*255},${fillColor[1]*255},${fillColor[2]*255})`;
+	ctx.stroke();
+}
+{
+	ctx.beginPath();
+	ctx.moveTo(i,H*3/4);
+	ctx.lineTo(i,H);
+	let fillColor = spe.getRGBnormal(i/W);
+	ctx.strokeStyle = `rgb(${fillColor[0]*255},${fillColor[1]*255},${fillColor[2]*255})`;
+	ctx.stroke();
+}
+}
+
+</script>
+</html>
