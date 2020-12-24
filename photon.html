@@ -167,8 +167,10 @@ sce.addLight(new pointLight(new vec2(100,200) ,[100,100,100]));
 
 {
 	let scale = 150;
-	sce.addObject(new biConvexLens(new vec2(200,200),0.375*scale,0.15*scale,0.75*scale,0.75*scale,sampleDielectric));
-	sce.addObject(new biConcaveLens(new vec2(300,200),0.375*scale,0.0375*scale,0.75*scale,0.75*scale,sampleDielectric));
+	let posScale = 150;
+	sce.addObject(new biConvexLens(new vec2(300-0.4*posScale,200),0.375*scale,0.15*scale,0.75*scale,0.75*scale,sampleDielectric));
+	sce.addObject(new biConcaveLens(new vec2(300+0.4*posScale,200),0.375*scale,0.0375*scale,0.75*scale,0.75*scale,sampleDielectric));
+	sce.addObject(new meniscusLens(new vec2(300+0.8*posScale,200),0.375*scale,0.15*scale,0.45*scale,0.75*scale,sampleDielectric));
 }
 //sce.addObject(new prismObject(new vec2(220,200),50,sampleDielectric));
 //sce.addObject(new sphereObject(new vec2(200,200),200,sampleDiffuse));
