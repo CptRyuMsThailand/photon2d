@@ -48,7 +48,7 @@ function drawLine(x0,y0,x1,y1,c,ch){
 		if(x >= 0 && x < W && y >= 0 && y < H){
 			let dx = Math.abs(x0 - x1);
 			let dy = Math.abs(y0 - y1);
-			let coeff = Math.sqrt();
+			
 			fbuff[(x+y*W)*(channelCount)+ch] += c*v*(Math.sqrt(dx*dx+dy*dy)/Math.max(dx,dy));
 		}
 
