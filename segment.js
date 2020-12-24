@@ -40,13 +40,18 @@ class Segment{
 			}
 		}
 		return [-1];
-		
+
 	}
 	static horzSpanIntersect(ro,rd,y,rad){
-		
+
 		let dc = (y-ro.y)*rd.inverse().y;
 		let dt = rd.sign().y*rad*rd.inverse().y;
 		return new Segment(dc-dt,dc+dt,new vec2(0,-rd.sign().y),new vec2(0,rd.sign().y));
+	}
+	static vertSpanIntersect(ro,rd,x,rad){
+		let dc = (x-ro.x)*rd.inverse().x;
+		let dt = rd.sign().x*rad*rd.inverse().x;
+		return new Segment(dc-dt,dc+dt,new vec2(-rd.sign().x,0),new vec2(rd.sign().x,0));
 	}
 	static sphereSegmentIntersect(ro,rd,center,rad){
 		let res = new Segment();
@@ -80,11 +85,31 @@ class biConvexLens extends basicObject{
 		return Segment.collapse(
 			Segment.intersection(
 			Segment.intersection(
-			
+
 				Segment.sphereSegmentIntersect(ro,rd,vec2.add(this.center,new vec2(this.r1 - this.d,0.0)),this.r1),
-				Segment.sphereSegmentIntersect(ro,rd,vec2.sub(this.center,new vec2(this.r2 - this.d,0.0)),this.r2)	
+				Segment.sphereSegmentIntersect(ro,rd,vec2.sub(this.center,new vec2(this.r2 - this.d,0.0)),this.r2)
 			),Segment.horzSpanIntersect(ro,rd,this.center.y,this.h)
 			)
 			);
+	}
+}
+class biConcaveLens extends basicObject{
+	constructor(center,h,d,r1,r2,brdfFnc){
+		super(brdfFnc);
+		this.center = center;
+		this.h = h;
+		this.d = d;
+		this.r1 = r1;
+		this.r2 = r2;
+	}
+	trace(ro,rd){
+		return Segment.collapse(
+			Segment.subtraction(Segment.subtraction(
+					Segment.intersection(
+						Segment.horzSpanIntersect(ro,rd,this.center.y,this.h),
+						Segment.vertSpanIntersect(ro,rd,this.center.x+0.5*(this.r2-this.r1),0.5*(Math.abs(this.r1)+Math.abs(this.r2))+this.d)
+					),Segment.sphereSegmentIntersect(ro,rd,vec2.add(this.center,new vec2(this.r2+this.d,0)),this.r2),1e-4),
+					Segment.sphereSegmentIntersect(ro,rd,vec2.sub(this.center,new vec2(this.r1+this.d,0)),this.r1),1e-4)
+		);
 	}
 }
